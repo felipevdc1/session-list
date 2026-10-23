@@ -1,0 +1,21 @@
+{
+  "name": "lista-da-sessao",
+  "version": "0.2.0",
+  "description": "A pane beside the chat with the parts of the agreed work that are still open — one list per terminal tab, surviving /clear, a new session and a crash.",
+  "types": "./types/index.d.ts",
+  "userConfig": {
+    "pasta": {
+      "type": "string",
+      "title": "Lists folder",
+      "description": "Where the lists are kept. Empty uses <home>/.claude/lista-da-sessao.",
+      "default": ""
+    },
+    "idioma": {
+      "type": "string",
+      "title": "Language",
+      "description": "Language of the pane and of what the mod tells Claude.",
+      "default": "en",
+      "options": ["en", "pt-BR"]
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "name": "session-list",
+  "owner": { "name": "felipevdc1" },
+  "plugins": [{ "name": "lista-da-sessao", "source": "./" }]
+}
