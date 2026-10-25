@@ -29,13 +29,13 @@ describe('tomDoTema', () => {
 describe('PALETAS', () => {
   test('escuro values are exact', () => {
     expect(PALETAS.escuro).toEqual({
-      rosa: '#ff2e93', lima: '#c6ff00', aviso: '#ff9f1c', texto: '#d9dce2', apagado: '#7b8290', fundo: '#15171c',
+      rosa: '#ff2e93', lima: '#c6ff00', aviso: '#ff9f1c', texto: '#d9dce2', feito: '#a9aeb8', apagado: '#7b8290', fundo: '#15171c',
     })
   })
 
   test('claro values are exact', () => {
     expect(PALETAS.claro).toEqual({
-      rosa: '#c2005f', lima: '#4d7a00', aviso: '#a85a00', texto: '#22262c', apagado: '#6b727d', fundo: '#fafafa',
+      rosa: '#c2005f', lima: '#4d7a00', aviso: '#a85a00', texto: '#22262c', feito: '#555b65', apagado: '#6b727d', fundo: '#fafafa',
     })
   })
 })

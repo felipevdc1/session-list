@@ -1,8 +1,8 @@
 # lista-da-sessao (Session list)
 
 A pane beside the Claude Code chat that keeps the parts of the work you agreed on in this conversation and that are still open.
-When you and Claude split a job into parts, Claude notes them in the pane right away and ticks each one off as it finishes.
-There is one list per terminal tab, and it survives `/clear`, a new session in the same tab, and a crash: a new tab offers you whatever a closed tab left open.
+When you and Claude split a job into parts, Claude notes them in the pane right away and ticks each one off as it finishes: a done part is struck through, and a list with nothing left open ends with "All done."
+There is one list per terminal tab, and it survives `/clear`, a crash, and (while it has open parts) a new session in the same tab: a new tab offers you whatever a closed tab left open.
 
 What it is not: a task manager.
 It never shows your to-do list and never copies items anywhere else; it only holds what is still open from the conversation.
@@ -37,7 +37,7 @@ It changes the pane and what the plugin tells Claude.
 `~/.claude/lista-da-sessao/` by default, one JSON file per list under `listas/`.
 The `pasta` option (Lists folder) puts them somewhere else.
 A list you discard is moved to `descartadas/`, not deleted: to undo, move its file back into `listas/` by hand.
-Lists with nothing left open whose tab has closed are deleted at the next start.
+Lists with nothing left open whose Claude session has ended are deleted at the next start, the tab's own included: a new conversation in that tab starts empty, while a list with open items carries over.
 
 ## How it works
 

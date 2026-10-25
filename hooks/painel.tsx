@@ -6,8 +6,9 @@
 // The drawing is a vertical rail: one node per row of meaning (the list's
 // head, then each item in the list's order), the rail running down the marker
 // column between them. Pink = what already happened (lit up to the last done
-// item), lime = where the person acts (open markers, the Continue chip),
-// orange = a list a closed tab left (dashed rail into its buttons).
+// item, and "all done" under a finished list; done text is struck through in
+// the quieter `feito` grey), lime = where the person acts (open markers, the
+// Continue chip), orange = a list a closed tab left (dashed rail into its buttons).
 
 import type { CommandRunResult, EngineInterface, RenderElement, RenderInput } from 'claude-code'
 
@@ -169,9 +170,14 @@ export async function desenhaPainel($: EngineInterface, e: RenderInput<'Pane'>):
             const k = n + 1
             const trilho = k < itens.length ? segmento(k) : null
             return item.feito
-              ? no('●', p.rosa, <Text color={p.texto} wrap="wrap">{item.texto}</Text>, trilho)
+              ? no('●', p.rosa, <Text color={p.feito} strikethrough wrap="wrap">{item.texto}</Text>, trilho)
               : no('○', p.lima, <Text color={p.texto} weight="bold" wrap="wrap">{item.texto}</Text>, trilho)
           })}
+          {!algumAberto && (
+            <Box marginTop={1}>
+              <Text color={p.rosa} weight="bold" wrap="wrap">{t.tudoFeito}</Text>
+            </Box>
+          )}
         </Box>
       )
 

@@ -285,12 +285,38 @@ test('head bold + underlined with the subject; items in list order; done pink, o
     expect([cabeca?.props.weight, cabeca?.props.underline, cabeca?.props.color], surface).toEqual(['bold', true, ESCURO.texto])
     const feito = await ui.find({ type: 'Text', text: 'Organização 1/3: modelo' })
     expect([feito?.props.weight, feito?.props.color, feito?.props.dimColor, feito?.props.strikethrough], surface)
-      .toEqual([undefined, ESCURO.texto, undefined, undefined])
+      .toEqual([undefined, ESCURO.feito, undefined, true])
     const aberto = await ui.find({ type: 'Text', text: 'Organização 2/3: conferência das melhorias' })
     expect([aberto?.props.weight, aberto?.props.color], surface).toEqual(['bold', ESCURO.texto])
     expect(await ui.find({ type: 'Text', text: 'Nada combinado ainda.' }), surface).toBe(undefined)
     await fecha(ui)
   }
+})
+
+test('all items done: a pink "all done" line closes the list; any open item hides it', OPCOES_PT, async ($, on) => {
+  const minha = lista('l_minha001', EU.aba, EU.dono.pid, [['a', true], ['b', false]], 'T')
+  await setup($, on, { minha })
+  for (const surface of SURFACES) {
+    const ui = await $.ui.mount(pane(surface))
+    expect(await ui.find({ type: 'Text', text: 'Tudo feito.' }), surface).toBe(undefined)
+    await fecha(ui)
+  }
+  await $.tool.call({ tool: `mcp__${PLUGIN}__lista`, acao: 'risca', ids: ['i2'] } as never)
+  for (const surface of SURFACES) {
+    const ui = await $.ui.mount(pane(surface))
+    const fim = await ui.find({ type: 'Text', text: 'Tudo feito.' })
+    expect([fim?.props.color, fim?.props.weight], surface).toEqual([ESCURO.rosa, 'bold'])
+    const feito = await ui.find({ type: 'Text', text: 'b' })
+    expect([feito?.props.color, feito?.props.strikethrough], surface).toEqual([ESCURO.feito, true])
+    await fecha(ui)
+  }
+})
+
+test('an empty list never says "all done"', OPCOES_PT, async ($, on) => {
+  await setup($, on, {})
+  const ui = await $.ui.mount(pane('terminal'))
+  expect(await ui.find({ type: 'Text', text: 'Tudo feito.' })).toBe(undefined)
+  await fecha(ui)
 })
 
 test('with no subject the head reads the pane title, in each language', OPCOES_EN, async ($, on) => {
@@ -443,7 +469,7 @@ const CHEIO = {
 test('dark theme: every color in the tree is from the dark palette, every role used', OPCOES_PT, async ($, on) => {
   await setup($, on, { ...CHEIO, tema: 'dark' })
   const ui = await $.ui.mount(pane('terminal'))
-  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
   await fecha(ui)
 })
 
@@ -452,7 +478,7 @@ for (const tema of ['light', 'light-daltonized', 'light-ansi']) {
     await setup($, on, { ...CHEIO, tema })
     for (const surface of SURFACES) {
       const ui = await $.ui.mount(pane(surface))
-      expect([...await cores(ui, CLARO)].sort(), surface).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+      expect([...await cores(ui, CLARO)].sort(), surface).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
       expect(await trilho(ui, CLARO), surface).toEqual(['● lima | T | ┃', '● rosa | a | │', '○ lima | b'])
       await fecha(ui)
     }
@@ -462,14 +488,14 @@ for (const tema of ['light', 'light-daltonized', 'light-ansi']) {
 test('cold start: no theme read yet (no /config answer) draws the dark palette', OPCOES_PT, async ($, on) => {
   await setup($, on, { ...CHEIO, tema: null })
   const ui = await $.ui.mount(pane('terminal'))
-  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
   await fecha(ui)
 })
 
 test('an unknown theme value (auto, a custom name) reads as dark', OPCOES_PT, async ($, on) => {
   await setup($, on, { ...CHEIO, tema: 'auto' })
   const ui = await $.ui.mount(pane('terminal'))
-  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
   await fecha(ui)
 })
 
@@ -482,11 +508,11 @@ test('a theme change in /config redraws the mounted pane with the other palette,
   expect(await trilho(ui, ESCURO)).toEqual(['● lima | T | ┃', '● rosa | a | │', '○ lima | b'])
 
   await $.config.set({ key: 'theme', value: 'light', previous: 'dark', provider: { plugin: 'engine', tier: 'core' }, origin: { kind: 'composer' } } as never)
-  expect([...await cores(ui, CLARO)].sort()).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+  expect([...await cores(ui, CLARO)].sort()).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
   expect(await trilho(ui, CLARO)).toEqual(['● lima | T | ┃', '● rosa | a | │', '○ lima | b'])
 
   await $.config.set({ key: 'theme', value: 'dark', previous: 'light', provider: { plugin: 'engine', tier: 'core' }, origin: { kind: 'composer' } } as never)
-  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'fundo', 'lima', 'rosa', 'texto'])
+  expect([...await cores(ui, ESCURO)].sort()).toEqual(['apagado', 'aviso', 'feito', 'fundo', 'lima', 'rosa', 'texto'])
   await fecha(ui)
 })
 

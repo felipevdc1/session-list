@@ -24,6 +24,7 @@ export type Textos = {
   continuarAqui: string
   descartar: string
   nadaCombinado: string
+  tudoFeito: string
   ilegivel: (arquivo: string) => string
   /** The pane's toasts when a button is refused; the list id goes in. */
   recusa: Record<Motivo, (id: string) => string>
@@ -78,6 +79,7 @@ const EN: Textos = {
   continuarAqui: 'Continue here',
   descartar: 'Discard',
   nadaCombinado: 'Nothing agreed yet.',
+  tudoFeito: 'All done.',
   ilegivel: arquivo => `unreadable list: ${arquivo}`,
   recusa: {
     'sumiu': () => 'That list is no longer there.',
@@ -136,6 +138,7 @@ const PT: Textos = {
   continuarAqui: 'Continuar aqui',
   descartar: 'Descartar',
   nadaCombinado: 'Nada combinado ainda.',
+  tudoFeito: 'Tudo feito.',
   ilegivel: arquivo => `lista ilegível: ${arquivo}`,
   recusa: {
     'sumiu': () => 'Essa lista já não está mais lá.',

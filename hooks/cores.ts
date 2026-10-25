@@ -10,9 +10,12 @@ export function tomDoTema(tema: string | null | undefined): Tom {
   return tema != null && tema.toLowerCase().includes('light') ? 'claro' : 'escuro'
 }
 
-export type Paleta = { rosa: string; lima: string; aviso: string; texto: string; apagado: string; fundo: string }
+// `feito` is the done item's text: quieter than `texto`, still readable
+// (APCA Lc 57 on the dark ground, 81 on the light; `apagado` is 35 / 71,
+// too faint once struck through, measured 2026-10-22).
+export type Paleta = { rosa: string; lima: string; aviso: string; texto: string; feito: string; apagado: string; fundo: string }
 
 export const PALETAS: Record<Tom, Paleta> = {
-  escuro: { rosa: '#ff2e93', lima: '#c6ff00', aviso: '#ff9f1c', texto: '#d9dce2', apagado: '#7b8290', fundo: '#15171c' },
-  claro: { rosa: '#c2005f', lima: '#4d7a00', aviso: '#a85a00', texto: '#22262c', apagado: '#6b727d', fundo: '#fafafa' },
+  escuro: { rosa: '#ff2e93', lima: '#c6ff00', aviso: '#ff9f1c', texto: '#d9dce2', feito: '#a9aeb8', apagado: '#7b8290', fundo: '#15171c' },
+  claro: { rosa: '#c2005f', lima: '#4d7a00', aviso: '#a85a00', texto: '#22262c', feito: '#555b65', apagado: '#6b727d', fundo: '#fafafa' },
 }

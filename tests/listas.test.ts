@@ -455,6 +455,40 @@ describe('status × operation grid', () => {
   })
 })
 
+describe('limpa: this tab, a new claude process', () => {
+  const ANTES: Eu = { aba: EU.aba, dono: { pid: 90, inicio: 'Thu Oct 22 14:00:00 2026' } }
+
+  test('the finished list a closed conversation left in this tab is removed', async () => {
+    const { $, disk, root } = await setup()
+    planta(disk, root, { ...lista('l_velha001', EU.aba, 90, [['feito', true]]), dono: ANTES.dono })
+    vivo(disk, EU)
+    expect(await limpa($, root, EU)).toEqual(['l_velha001'])
+    expect(await minhaLista($, root, EU)).toEqual({ minha: undefined, outrasDaAba: [], ilegiveis: [] })
+  })
+
+  test('a list with an open item from a closed conversation stays and is taken over', async () => {
+    const { $, disk, root } = await setup()
+    planta(disk, root, { ...lista('l_velha001', EU.aba, 90, [['feito', true], ['falta', false]]), dono: ANTES.dono })
+    vivo(disk, EU)
+    expect(await limpa($, root, EU)).toEqual([])
+    expect((await minhaLista($, root, EU)).minha?.id).toBe('l_velha001')
+  })
+
+  test('the finished list of this same process (after /clear) stays', async () => {
+    const { $, disk, root } = await setup()
+    planta(disk, root, { ...lista('l_minha001', EU.aba, 100, [['feito', true]]), dono: EU.dono })
+    vivo(disk, EU)
+    expect(await limpa($, root, EU)).toEqual([])
+  })
+
+  test('a finished list in this tab whose old process still runs stays', async () => {
+    const { $, disk, root } = await setup()
+    planta(disk, root, { ...lista('l_velha001', EU.aba, 90, [['feito', true]]), dono: ANTES.dono })
+    vivo(disk, EU, ANTES)
+    expect(await limpa($, root, EU)).toEqual([])
+  })
+})
+
 describe('puxa', () => {
   test('with no list here the orphan becomes mine, same id and items', async () => {
     const { $, disk, root } = await setup()

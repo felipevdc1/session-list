@@ -411,17 +411,18 @@ export async function descarta($: Host, raiz: string, eu: Eu, id: string): Promi
 }
 
 /**
- * Deletes the lists that are not this tab's, whose owner is not running and
- * that have no open item (finished work). Unreadable files are untouched.
+ * Deletes the lists whose owner is not running and that have no open item
+ * (finished work), this tab's included: a finished list a closed conversation
+ * left here goes, so a new conversation starts empty, while the list of this
+ * process (alive) survives /clear. Unreadable files are untouched.
  *
  * @returns the ids removed.
  */
-export async function limpa($: Host, raiz: string, eu: Eu): Promise<string[]> {
+export async function limpa($: Host, raiz: string, _eu: Eu): Promise<string[]> {
   const { listas } = await leTodas($, raiz)
-  const minha = escolheMinha(listas, eu.aba)
   const removidas: string[] = []
   for (const l of listas) {
-    if (l === minha || abertos(l).length > 0) continue
+    if (abertos(l).length > 0) continue
     if (await estaVivo($, l.dono)) continue
     await remove($, arquivoDe(raiz, l.id))
     removidas.push(l.id)
