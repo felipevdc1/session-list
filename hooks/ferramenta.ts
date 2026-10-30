@@ -154,7 +154,9 @@ export async function aoEnviarPrompt($: EngineInterface, e: Frozen<Args<'prompt.
   if (e.command || !quem || (await leEntregue($))) return next(e)
   await marcaEntregue($)
   await recarrega($)
-  const texto = contextoInicial(await leMinha($), await leOrfas($), textos(quem.idioma))
+  // a window driven by another program has no person to answer the orphan question
+  const orfas = (await $.env.get('LISTA_SESSAO_SEM_ORFAS')) ? [] : await leOrfas($)
+  const texto = contextoInicial(await leMinha($), orfas, textos(quem.idioma))
   if (texto === null) return next(e)
 
   return next({ ...e, context: [...(e.context ?? []), texto] })

@@ -488,6 +488,21 @@ describe('context at a conversation start', () => {
     vistos.push({ idioma: 'en', texto: t }, { idioma: 'en', texto: um }, { idioma: 'en', texto: ambos })
   })
 
+  test('prompt.submit with LISTA_SESSAO_SEM_ORFAS keeps the tab\'s list and drops the orphan question', async () => {
+    const { $, disk, root } = await setup()
+    await chama($, { acao: 'anota', textos: ['parte 2'] })
+    planta(disk, root, lista('l_orfa0009', 'iterm:B', 55, [['parte X', false]]))
+    const comVariavel = {
+      ...$,
+      env: { get: async (nome: string) => (nome === 'LISTA_SESSAO_SEM_ORFAS' ? '1' : await $.env.get(nome)) },
+    } as Comum
+    const um = await envia(comVariavel, { text: 'oi' })
+    expect(um.context?.length).toBe(1)
+    expect(um.context?.[0]).toContain('☐ i1 parte 2')
+    expect(um.context?.[0]).not.toContain('parte X')
+    sweep(disk, root)
+  })
+
   test('prompt.submit attaches the list and the orphan question once per conversation, after what came', async () => {
     const { $, disk, root } = await setup()
     await chama($, { acao: 'anota', textos: ['parte 2'] })

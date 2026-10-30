@@ -45,6 +45,7 @@ Lists with nothing left open whose Claude session has ended are deleted at the n
 - **Who owns a list.** Each list records the `claude` process that owns it: its pid and its start time. A pid that is running but started at another time counts as dead, so a reused pid is not mistaken for the old owner.
 - **Orphans.** A list whose owner is gone and that still has open items is offered to the next tab: in the pane, with Continue here and Discard, and to Claude on the first message, which asks you. Continue moves it into this tab (or appends its open items to this tab's list).
 - **Two tabs, one orphan.** Adopting or discarding takes a lock first: a folder created with `mkdir`, which only one of two racing tabs can create.
+- **Windows no person is at.** With `LISTA_SESSAO_SEM_ORFAS` set, a window skips the question about orphans and keeps its own list. For windows another program opens and drives.
 - **Only interactive sessions.** A `claude -p` run or any other non-interactive session leaves the lists alone.
 - Every change is written to disk at once, atomically (a temp file, then a rename).
 
